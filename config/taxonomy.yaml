@@ -1,0 +1,56 @@
+# The labelling taxonomy for enhanced due diligence (EDD) reviews. Written with the EDD subject-matter experts;
+# the LLM prompt, the evidence checks, the labelling guideline and the eval harness all read this one file.
+version: 2
+reporting_threshold_eur: 10000
+high_risk_jurisdictions: [IR, KP, MM, SY, YE, AF, HT, SS]
+
+flags:
+  structuring:
+    definition: Three or more transfers between 90% and 100% of the reporting threshold within 30 days.
+    severity: 3
+    evidence: near_threshold
+    document: source_of_funds
+  pass_through:
+    definition: Funds received and sent onward within 48 hours, keeping 80% or more of the value.
+    severity: 2
+    evidence: pass_through
+    document: counterparty_relationship
+  high_velocity_inbound:
+    definition: Twenty or more inbound payments from fifteen or more distinct senders within 14 days.
+    severity: 2
+    evidence: inbound_velocity
+    document: explanation_of_inbound_payments
+  funnel_outbound:
+    definition: Seventy percent or more of outbound value going to a single counterparty abroad.
+    severity: 2
+    evidence: funnel
+    document: counterparty_relationship
+  high_risk_jurisdiction:
+    definition: Any transfer to or from a jurisdiction on the high-risk list.
+    severity: 2
+    evidence: jurisdiction
+    document: purpose_of_payments
+  profile_mismatch:
+    definition: Monthly volume three or more times what the customer declared, or activity at odds with the declared occupation or business.
+    severity: 1
+    evidence: volume_vs_declared
+    document: proof_of_income_or_business
+  crypto_offramp:
+    definition: Thirty percent or more of outbound value sent to cryptocurrency exchanges.
+    severity: 2
+    evidence: crypto
+    document: crypto_source_of_funds
+
+risk:
+  # Sum of severities of the flags present, reduced when the customer's declared business explains a pattern.
+  high_at: 4
+  medium_at: 2
+  mitigations:
+    marketplace_seller: [high_velocity_inbound]
+    payroll_provider: [funnel_outbound, high_velocity_inbound]
+    remittance_family: [funnel_outbound]
+
+guideline_notes:
+  - A flag is an indicator, not a finding. Record it when its definition is met, then judge the risk with the customer's context.
+  - Evidence is a list of transfer ids that show the pattern; a flag without evidence is not recorded.
+  - Mitigation lowers risk only when the declared business is verified (documents on file).

@@ -1,0 +1,577 @@
+{
+ "agreement": {
+  "cases": 900,
+  "flags": {
+   "structuring": 1.0,
+   "pass_through": 0.9455258570598492,
+   "high_velocity_inbound": 1.0,
+   "funnel_outbound": 1.0,
+   "high_risk_jurisdiction": 1.0,
+   "profile_mismatch": 0.731199264818502,
+   "crypto_offramp": 1.0
+  },
+  "risk": 0.905426335339026,
+  "disagreements": 121,
+  "adjudicated_label_error_rate": 0.0022222222222222222
+ },
+ "experiments": [
+  {
+   "id": "E1-context-order",
+   "hypothesis": "Putting computed facts first and transfers in time order makes more cases fully right than the raw export.",
+   "change": {
+    "context_order": "aggregated_first"
+   },
+   "metric": "case_correct",
+   "direction": "greater",
+   "n": 900,
+   "effect": 0.02,
+   "ci": [
+    -0.021138888888888888,
+    0.058888888888888886
+   ],
+   "p": 0.365,
+   "p_one_sided": 0.1825,
+   "confirmed": false
+  },
+  {
+   "id": "E2-few-shot-rare",
+   "hypothesis": "Three worked examples raise recall of crypto off-ramps, a rare typology.",
+   "change": {
+    "few_shot": 3
+   },
+   "metric": "recall:crypto_offramp",
+   "direction": "greater",
+   "n": 55,
+   "effect": 0.07272727272727272,
+   "ci": [
+    -0.09090909090909091,
+    0.23636363636363636
+   ],
+   "p": 0.406,
+   "p_one_sided": 0.203,
+   "confirmed": false
+  },
+  {
+   "id": "E3-chain-of-thought",
+   "hypothesis": "Asking the model to reason flag by flag improves the risk class.",
+   "change": {
+    "cot": true
+   },
+   "metric": "risk_correct",
+   "direction": "greater",
+   "n": 900,
+   "effect": 0.057777777777777775,
+   "ci": [
+    0.021111111111111112,
+    0.09555555555555556
+   ],
+   "p": 0.002,
+   "p_one_sided": 0.001,
+   "confirmed": true
+  },
+  {
+   "id": "E4-tool-schema",
+   "hypothesis": "A forced tool schema instead of free JSON text reduces cases with no usable draft or a wrong number.",
+   "change": {
+    "output": "tool_schema"
+   },
+   "metric": "wrong_fact",
+   "direction": "less",
+   "n": 900,
+   "effect": -0.01888888888888889,
+   "ci": [
+    -0.04555555555555556,
+    0.008888888888888889
+   ],
+   "p": 0.194,
+   "p_one_sided": 0.097,
+   "confirmed": false
+  },
+  {
+   "id": "E5-computed-indicators",
+   "hypothesis": "Giving the model the computed indicators and asking it only for judgement flags makes more cases fully right.",
+   "change": {
+    "indicators": true
+   },
+   "metric": "case_correct",
+   "direction": "greater",
+   "n": 900,
+   "effect": 0.23,
+   "ci": [
+    0.19333333333333333,
+    0.2644444444444444
+   ],
+   "p": 0.0,
+   "p_one_sided": 0.0,
+   "confirmed": true
+  },
+  {
+   "id": "E6-smaller-model",
+   "hypothesis": "Claude Haiku 4.5 makes fewer cases fully right than Sonnet 4.5 (the price of a cheaper model).",
+   "change": {
+    "model": "anthropic.claude-haiku-4-5"
+   },
+   "metric": "case_correct",
+   "direction": "less",
+   "n": 900,
+   "effect": -0.035555555555555556,
+   "ci": [
+    -0.07669444444444444,
+    0.005555555555555556
+   ],
+   "p": 0.091,
+   "p_one_sided": 0.0455,
+   "confirmed": false
+  },
+  {
+   "id": "E7-more-examples",
+   "hypothesis": "Eight examples instead of three make more cases fully right.",
+   "change": {
+    "few_shot": 8
+   },
+   "against": {
+    "few_shot": 3
+   },
+   "metric": "case_correct",
+   "direction": "greater",
+   "n": 900,
+   "effect": 0.027777777777777776,
+   "ci": [
+    -0.011111111111111112,
+    0.06888888888888889
+   ],
+   "p": 0.203,
+   "p_one_sided": 0.1015,
+   "confirmed": false
+  }
+ ],
+ "chosen_config": {
+  "model": "anthropic.claude-sonnet-4-5",
+  "few_shot": 0,
+  "few_shot_set": "v1",
+  "cot": true,
+  "context_order": "raw",
+  "output": "json_text",
+  "indicators": true
+ },
+ "baseline": {
+  "cases": 900,
+  "flag_precision": 0.9366197183098591,
+  "flag_recall": 0.726775956284153,
+  "flag_f1": 0.8184615384615385,
+  "risk_accuracy": 0.7588888888888888,
+  "risk_accuracy_ci": [
+   0.7298800107897743,
+   0.7856971354588864
+  ],
+  "high_risk_recall": 0.693069306930693,
+  "high_risk_recall_ci": [
+   0.5974265174495047,
+   0.7745637280000558
+  ],
+  "case_correct": 0.6388888888888888,
+  "case_correct_ci": [
+   0.6069792791287835,
+   0.6696179023350902
+  ],
+  "no_draft_rate": 0.0033333333333333335,
+  "unsupported_evidence_rate": 0.1988888888888889,
+  "wrong_fact_rate": 0.10333333333333333,
+  "risk_raised_by_check": 0.0,
+  "cost_per_case_usd": 0.012863793333333335,
+  "p95_latency_ms": 3078.015,
+  "failure_modes": {
+   "missed_flag": 184,
+   "unsupported_evidence": 179,
+   "risk_too_high": 128,
+   "wrong_fact": 93,
+   "risk_too_low": 86,
+   "false_flag": 36,
+   "format": 3
+  },
+  "per_flag": {
+   "structuring": {
+    "support": 48,
+    "precision": 1.0,
+    "recall": 0.7291666666666666,
+    "recall_ci": [
+     0.5900303501775939,
+     0.8343404237254355
+    ]
+   },
+   "pass_through": {
+    "support": 51,
+    "precision": 1.0,
+    "recall": 0.7450980392156863,
+    "recall_ci": [
+     0.6113171816155626,
+     0.844542318434177
+    ]
+   },
+   "high_velocity_inbound": {
+    "support": 124,
+    "precision": 1.0,
+    "recall": 0.6048387096774194,
+    "recall_ci": [
+     0.5168839177124075,
+     0.6864929855226117
+    ]
+   },
+   "funnel_outbound": {
+    "support": 233,
+    "precision": 0.9938650306748467,
+    "recall": 0.6952789699570815,
+    "recall_ci": [
+     0.6334055671432963,
+     0.7508177037870414
+    ]
+   },
+   "high_risk_jurisdiction": {
+    "support": 39,
+    "precision": 1.0,
+    "recall": 0.7948717948717948,
+    "recall_ci": [
+     0.644660319864177,
+     0.8922028176928961
+    ]
+   },
+   "profile_mismatch": {
+    "support": 182,
+    "precision": 0.8333333333333334,
+    "recall": 0.8241758241758241,
+    "recall_ci": [
+     0.7623361459855162,
+     0.8726136695658684
+    ]
+   },
+   "crypto_offramp": {
+    "support": 55,
+    "precision": 0.8913043478260869,
+    "recall": 0.7454545454545455,
+    "recall_ci": [
+     0.6169812871823414,
+     0.841878852269271
+    ]
+   }
+  }
+ },
+ "chosen": {
+  "cases": 900,
+  "flag_precision": 0.9746478873239437,
+  "flag_recall": 0.9453551912568307,
+  "flag_f1": 0.9597780859916782,
+  "risk_accuracy": 0.9577777777777777,
+  "risk_accuracy_ci": [
+   0.9425785033777461,
+   0.9690858067271819
+  ],
+  "high_risk_recall": 0.9504950495049505,
+  "high_risk_recall_ci": [
+   0.8893057492703144,
+   0.9786714901119936
+  ],
+  "case_correct": 0.9133333333333333,
+  "case_correct_ci": [
+   0.8931508410010287,
+   0.9300023710354597
+  ],
+  "no_draft_rate": 0.0022222222222222222,
+  "unsupported_evidence_rate": 0.04,
+  "wrong_fact_rate": 0.06888888888888889,
+  "risk_raised_by_check": 0.0,
+  "cost_per_case_usd": 0.022040663333333335,
+  "p95_latency_ms": 12215.9,
+  "failure_modes": {
+   "wrong_fact": 62,
+   "missed_flag": 39,
+   "unsupported_evidence": 36,
+   "risk_too_high": 20,
+   "false_flag": 18,
+   "risk_too_low": 16,
+   "format": 2
+  },
+  "per_flag": {
+   "structuring": {
+    "support": 48,
+    "precision": 1.0,
+    "recall": 1.0,
+    "recall_ci": [
+     0.9258998703338824,
+     0.9999999999999999
+    ]
+   },
+   "pass_through": {
+    "support": 51,
+    "precision": 1.0,
+    "recall": 1.0,
+    "recall_ci": [
+     0.9299533801014687,
+     1.0
+    ]
+   },
+   "high_velocity_inbound": {
+    "support": 124,
+    "precision": 1.0,
+    "recall": 1.0,
+    "recall_ci": [
+     0.9699513846593223,
+     0.9999999999999999
+    ]
+   },
+   "funnel_outbound": {
+    "support": 233,
+    "precision": 1.0,
+    "recall": 1.0,
+    "recall_ci": [
+     0.9837804629315244,
+     1.0
+    ]
+   },
+   "high_risk_jurisdiction": {
+    "support": 39,
+    "precision": 1.0,
+    "recall": 1.0,
+    "recall_ci": [
+     0.9103331462924287,
+     1.0
+    ]
+   },
+   "profile_mismatch": {
+    "support": 182,
+    "precision": 0.9117647058823529,
+    "recall": 0.8516483516483516,
+    "recall_ci": [
+     0.7927614156435066,
+     0.895997706310538
+    ]
+   },
+   "crypto_offramp": {
+    "support": 55,
+    "precision": 0.9333333333333333,
+    "recall": 0.7636363636363637,
+    "recall_ci": [
+     0.6365163381083228,
+     0.8563334413026682
+    ]
+   }
+  }
+ },
+ "chosen_without_checks": {
+  "cases": 900,
+  "flag_precision": 0.9343163538873994,
+  "flag_recall": 0.9521857923497268,
+  "flag_f1": 0.9431664411366711,
+  "risk_accuracy": 0.9577777777777777,
+  "risk_accuracy_ci": [
+   0.9425785033777461,
+   0.9690858067271819
+  ],
+  "high_risk_recall": 0.9504950495049505,
+  "high_risk_recall_ci": [
+   0.8893057492703144,
+   0.9786714901119936
+  ],
+  "case_correct": 0.8933333333333333,
+  "case_correct_ci": [
+   0.8714678866133181,
+   0.9118553312923725
+  ],
+  "no_draft_rate": 0.0022222222222222222,
+  "unsupported_evidence_rate": 0.0,
+  "wrong_fact_rate": 0.0,
+  "risk_raised_by_check": 0.0,
+  "cost_per_case_usd": 0.022040663333333335,
+  "p95_latency_ms": 12215.9,
+  "failure_modes": {
+   "false_flag": 49,
+   "missed_flag": 35,
+   "risk_too_high": 20,
+   "risk_too_low": 16,
+   "format": 2
+  },
+  "per_flag": {
+   "structuring": {
+    "support": 48,
+    "precision": 1.0,
+    "recall": 1.0,
+    "recall_ci": [
+     0.9258998703338824,
+     0.9999999999999999
+    ]
+   },
+   "pass_through": {
+    "support": 51,
+    "precision": 1.0,
+    "recall": 1.0,
+    "recall_ci": [
+     0.9299533801014687,
+     1.0
+    ]
+   },
+   "high_velocity_inbound": {
+    "support": 124,
+    "precision": 1.0,
+    "recall": 1.0,
+    "recall_ci": [
+     0.9699513846593223,
+     0.9999999999999999
+    ]
+   },
+   "funnel_outbound": {
+    "support": 233,
+    "precision": 1.0,
+    "recall": 1.0,
+    "recall_ci": [
+     0.9837804629315244,
+     1.0
+    ]
+   },
+   "high_risk_jurisdiction": {
+    "support": 39,
+    "precision": 1.0,
+    "recall": 1.0,
+    "recall_ci": [
+     0.9103331462924287,
+     1.0
+    ]
+   },
+   "profile_mismatch": {
+    "support": 182,
+    "precision": 0.8092783505154639,
+    "recall": 0.8626373626373627,
+    "recall_ci": [
+     0.8050860834788062,
+     0.9051967610363024
+    ]
+   },
+   "crypto_offramp": {
+    "support": 55,
+    "precision": 0.7894736842105263,
+    "recall": 0.8181818181818182,
+    "recall_ci": [
+     0.6966954036336236,
+     0.8981232956555033
+    ]
+   }
+  }
+ },
+ "chosen_vs_baseline": {
+  "metric": "case_correct",
+  "n": 900,
+  "effect": 0.27444444444444444,
+  "ci": [
+   0.24,
+   0.3088888888888889
+  ],
+  "p": 0.0
+ },
+ "chosen_against_truth": {
+  "cases": 900,
+  "flag_precision": 0.9746478873239437,
+  "flag_recall": 0.9453551912568307,
+  "flag_f1": 0.9597780859916782,
+  "risk_accuracy": 0.96,
+  "risk_accuracy_ci": [
+   0.9451210041792689,
+   0.9709688608290811
+  ],
+  "high_risk_recall": 0.96,
+  "high_risk_recall_ci": [
+   0.9016292856411208,
+   0.9843366960084523
+  ],
+  "case_correct": 0.9144444444444444,
+  "case_correct_ci": [
+   0.8943631599990971,
+   0.9310028294891022
+  ],
+  "no_draft_rate": 0.0022222222222222222,
+  "unsupported_evidence_rate": 0.04,
+  "wrong_fact_rate": 0.06888888888888889,
+  "risk_raised_by_check": 0.0,
+  "cost_per_case_usd": 0.022040663333333335,
+  "p95_latency_ms": 12215.9,
+  "failure_modes": {
+   "wrong_fact": 62,
+   "missed_flag": 39,
+   "unsupported_evidence": 36,
+   "risk_too_high": 20,
+   "false_flag": 18,
+   "risk_too_low": 14,
+   "format": 2
+  },
+  "per_flag": {
+   "structuring": {
+    "support": 48,
+    "precision": 1.0,
+    "recall": 1.0,
+    "recall_ci": [
+     0.9258998703338824,
+     0.9999999999999999
+    ]
+   },
+   "pass_through": {
+    "support": 51,
+    "precision": 1.0,
+    "recall": 1.0,
+    "recall_ci": [
+     0.9299533801014687,
+     1.0
+    ]
+   },
+   "high_velocity_inbound": {
+    "support": 124,
+    "precision": 1.0,
+    "recall": 1.0,
+    "recall_ci": [
+     0.9699513846593223,
+     0.9999999999999999
+    ]
+   },
+   "funnel_outbound": {
+    "support": 233,
+    "precision": 1.0,
+    "recall": 1.0,
+    "recall_ci": [
+     0.9837804629315244,
+     1.0
+    ]
+   },
+   "high_risk_jurisdiction": {
+    "support": 39,
+    "precision": 1.0,
+    "recall": 1.0,
+    "recall_ci": [
+     0.9103331462924287,
+     1.0
+    ]
+   },
+   "profile_mismatch": {
+    "support": 182,
+    "precision": 0.9117647058823529,
+    "recall": 0.8516483516483516,
+    "recall_ci": [
+     0.7927614156435066,
+     0.895997706310538
+    ]
+   },
+   "crypto_offramp": {
+    "support": 55,
+    "precision": 0.9333333333333333,
+    "recall": 0.7636363636363637,
+    "recall_ci": [
+     0.6365163381083228,
+     0.8563334413026682
+    ]
+   }
+  }
+ },
+ "checks": {
+  "unsupported_flags_dropped": 36,
+  "cases_with_unsupported_flag_without_checks": 0.05444444444444444,
+  "cases_with_wrong_number_corrected": 0.06888888888888889,
+  "indicators_added": 0,
+  "risk_raised": 0
+ },
+ "minutes": 0.1
+}

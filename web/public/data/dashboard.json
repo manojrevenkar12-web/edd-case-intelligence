@@ -1,0 +1,1212 @@
+{
+ "chosen_config": {
+  "model": "anthropic.claude-sonnet-4-5",
+  "few_shot": 0,
+  "few_shot_set": "v1",
+  "cot": true,
+  "context_order": "raw",
+  "output": "json_text",
+  "indicators": true
+ },
+ "agreement": {
+  "dev": {
+   "cases": 900,
+   "flags": {
+    "structuring": 1.0,
+    "pass_through": 0.9619192688499617,
+    "high_velocity_inbound": 1.0,
+    "funnel_outbound": 1.0,
+    "high_risk_jurisdiction": 1.0,
+    "profile_mismatch": 0.6690435839222333,
+    "crypto_offramp": 1.0
+   },
+   "risk": 0.8846756205210953,
+   "disagreements": 143,
+   "adjudicated_label_error_rate": 0.0
+  },
+  "heldout": {
+   "cases": 900,
+   "flags": {
+    "structuring": 1.0,
+    "pass_through": 0.9455258570598492,
+    "high_velocity_inbound": 1.0,
+    "funnel_outbound": 1.0,
+    "high_risk_jurisdiction": 1.0,
+    "profile_mismatch": 0.731199264818502,
+    "crypto_offramp": 1.0
+   },
+   "risk": 0.905426335339026,
+   "disagreements": 121,
+   "adjudicated_label_error_rate": 0.0022222222222222222
+  }
+ },
+ "experiments": [
+  {
+   "id": "E1-context-order",
+   "hypothesis": "Putting computed facts first and transfers in time order makes more cases fully right than the raw export.",
+   "metric": "case_correct",
+   "direction": "greater",
+   "dev": {
+    "effect": 0.012222222222222223,
+    "ci": [
+     -0.027777777777777776,
+     0.051111111111111114
+    ],
+    "p_one_sided": 0.292,
+    "confirmed": false,
+    "n": 900
+   },
+   "heldout": {
+    "effect": 0.02,
+    "ci": [
+     -0.021138888888888888,
+     0.058888888888888886
+    ],
+    "p_one_sided": 0.1825,
+    "confirmed": false,
+    "n": 900
+   }
+  },
+  {
+   "id": "E2-few-shot-rare",
+   "hypothesis": "Three worked examples raise recall of crypto off-ramps, a rare typology.",
+   "metric": "recall:crypto_offramp",
+   "direction": "greater",
+   "dev": {
+    "effect": 0.16279069767441862,
+    "ci": [
+     0.0,
+     0.32558139534883723
+    ],
+    "p_one_sided": 0.0395,
+    "confirmed": false,
+    "n": 43
+   },
+   "heldout": {
+    "effect": 0.07272727272727272,
+    "ci": [
+     -0.09090909090909091,
+     0.23636363636363636
+    ],
+    "p_one_sided": 0.203,
+    "confirmed": false,
+    "n": 55
+   }
+  },
+  {
+   "id": "E3-chain-of-thought",
+   "hypothesis": "Asking the model to reason flag by flag improves the risk class.",
+   "metric": "risk_correct",
+   "direction": "greater",
+   "dev": {
+    "effect": 0.04888888888888889,
+    "ci": [
+     0.013333333333333334,
+     0.08444444444444445
+    ],
+    "p_one_sided": 0.003,
+    "confirmed": true,
+    "n": 900
+   },
+   "heldout": {
+    "effect": 0.057777777777777775,
+    "ci": [
+     0.021111111111111112,
+     0.09555555555555556
+    ],
+    "p_one_sided": 0.001,
+    "confirmed": true,
+    "n": 900
+   }
+  },
+  {
+   "id": "E4-tool-schema",
+   "hypothesis": "A forced tool schema instead of free JSON text reduces cases with no usable draft or a wrong number.",
+   "metric": "wrong_fact",
+   "direction": "less",
+   "dev": {
+    "effect": -0.0033333333333333335,
+    "ci": [
+     -0.03,
+     0.023333333333333334
+    ],
+    "p_one_sided": 0.3945,
+    "confirmed": false,
+    "n": 900
+   },
+   "heldout": {
+    "effect": -0.01888888888888889,
+    "ci": [
+     -0.04555555555555556,
+     0.008888888888888889
+    ],
+    "p_one_sided": 0.097,
+    "confirmed": false,
+    "n": 900
+   }
+  },
+  {
+   "id": "E5-computed-indicators",
+   "hypothesis": "Giving the model the computed indicators and asking it only for judgement flags makes more cases fully right.",
+   "metric": "case_correct",
+   "direction": "greater",
+   "dev": {
+    "effect": 0.21,
+    "ci": [
+     0.1766388888888889,
+     0.24444444444444444
+    ],
+    "p_one_sided": 0.0,
+    "confirmed": true,
+    "n": 900
+   },
+   "heldout": {
+    "effect": 0.23,
+    "ci": [
+     0.19333333333333333,
+     0.2644444444444444
+    ],
+    "p_one_sided": 0.0,
+    "confirmed": true,
+    "n": 900
+   }
+  },
+  {
+   "id": "E6-smaller-model",
+   "hypothesis": "Claude Haiku 4.5 makes fewer cases fully right than Sonnet 4.5 (the price of a cheaper model).",
+   "metric": "case_correct",
+   "direction": "less",
+   "dev": {
+    "effect": -0.03,
+    "ci": [
+     -0.07,
+     0.013333333333333334
+    ],
+    "p_one_sided": 0.083,
+    "confirmed": false,
+    "n": 900
+   },
+   "heldout": {
+    "effect": -0.035555555555555556,
+    "ci": [
+     -0.07669444444444444,
+     0.005555555555555556
+    ],
+    "p_one_sided": 0.0455,
+    "confirmed": false,
+    "n": 900
+   }
+  },
+  {
+   "id": "E7-more-examples",
+   "hypothesis": "Eight examples instead of three make more cases fully right.",
+   "metric": "case_correct",
+   "direction": "greater",
+   "dev": {
+    "effect": -0.0077777777777777776,
+    "ci": [
+     -0.04777777777777778,
+     0.03333333333333333
+    ],
+    "p_one_sided": 0.641,
+    "confirmed": false,
+    "n": 900
+   },
+   "heldout": {
+    "effect": 0.027777777777777776,
+    "ci": [
+     -0.011111111111111112,
+     0.06888888888888889
+    ],
+    "p_one_sided": 0.1015,
+    "confirmed": false,
+    "n": 900
+   }
+  }
+ ],
+ "heldout": {
+  "baseline": {
+   "flag_precision": 0.9366197183098591,
+   "flag_recall": 0.726775956284153,
+   "risk_accuracy": 0.7588888888888888,
+   "high_risk_recall": 0.693069306930693,
+   "case_correct": 0.6388888888888888,
+   "no_draft_rate": 0.0033333333333333335,
+   "cost_per_case_usd": 0.012863793333333335,
+   "p95_latency_ms": 3078.015,
+   "case_correct_ci": [
+    0.6069792791287835,
+    0.6696179023350902
+   ],
+   "high_risk_recall_ci": [
+    0.5974265174495047,
+    0.7745637280000558
+   ],
+   "failure_modes": {
+    "missed_flag": 184,
+    "unsupported_evidence": 179,
+    "risk_too_high": 128,
+    "wrong_fact": 93,
+    "risk_too_low": 86,
+    "false_flag": 36,
+    "format": 3
+   },
+   "per_flag": {
+    "structuring": {
+     "support": 48,
+     "precision": 1.0,
+     "recall": 0.7291666666666666,
+     "recall_ci": [
+      0.5900303501775939,
+      0.8343404237254355
+     ]
+    },
+    "pass_through": {
+     "support": 51,
+     "precision": 1.0,
+     "recall": 0.7450980392156863,
+     "recall_ci": [
+      0.6113171816155626,
+      0.844542318434177
+     ]
+    },
+    "high_velocity_inbound": {
+     "support": 124,
+     "precision": 1.0,
+     "recall": 0.6048387096774194,
+     "recall_ci": [
+      0.5168839177124075,
+      0.6864929855226117
+     ]
+    },
+    "funnel_outbound": {
+     "support": 233,
+     "precision": 0.9938650306748467,
+     "recall": 0.6952789699570815,
+     "recall_ci": [
+      0.6334055671432963,
+      0.7508177037870414
+     ]
+    },
+    "high_risk_jurisdiction": {
+     "support": 39,
+     "precision": 1.0,
+     "recall": 0.7948717948717948,
+     "recall_ci": [
+      0.644660319864177,
+      0.8922028176928961
+     ]
+    },
+    "profile_mismatch": {
+     "support": 182,
+     "precision": 0.8333333333333334,
+     "recall": 0.8241758241758241,
+     "recall_ci": [
+      0.7623361459855162,
+      0.8726136695658684
+     ]
+    },
+    "crypto_offramp": {
+     "support": 55,
+     "precision": 0.8913043478260869,
+     "recall": 0.7454545454545455,
+     "recall_ci": [
+      0.6169812871823414,
+      0.841878852269271
+     ]
+    }
+   }
+  },
+  "chosen": {
+   "flag_precision": 0.9746478873239437,
+   "flag_recall": 0.9453551912568307,
+   "risk_accuracy": 0.9577777777777777,
+   "high_risk_recall": 0.9504950495049505,
+   "case_correct": 0.9133333333333333,
+   "no_draft_rate": 0.0022222222222222222,
+   "cost_per_case_usd": 0.022040663333333335,
+   "p95_latency_ms": 12215.9,
+   "case_correct_ci": [
+    0.8931508410010287,
+    0.9300023710354597
+   ],
+   "high_risk_recall_ci": [
+    0.8893057492703144,
+    0.9786714901119936
+   ],
+   "failure_modes": {
+    "wrong_fact": 62,
+    "missed_flag": 39,
+    "unsupported_evidence": 36,
+    "risk_too_high": 20,
+    "false_flag": 18,
+    "risk_too_low": 16,
+    "format": 2
+   },
+   "per_flag": {
+    "structuring": {
+     "support": 48,
+     "precision": 1.0,
+     "recall": 1.0,
+     "recall_ci": [
+      0.9258998703338824,
+      0.9999999999999999
+     ]
+    },
+    "pass_through": {
+     "support": 51,
+     "precision": 1.0,
+     "recall": 1.0,
+     "recall_ci": [
+      0.9299533801014687,
+      1.0
+     ]
+    },
+    "high_velocity_inbound": {
+     "support": 124,
+     "precision": 1.0,
+     "recall": 1.0,
+     "recall_ci": [
+      0.9699513846593223,
+      0.9999999999999999
+     ]
+    },
+    "funnel_outbound": {
+     "support": 233,
+     "precision": 1.0,
+     "recall": 1.0,
+     "recall_ci": [
+      0.9837804629315244,
+      1.0
+     ]
+    },
+    "high_risk_jurisdiction": {
+     "support": 39,
+     "precision": 1.0,
+     "recall": 1.0,
+     "recall_ci": [
+      0.9103331462924287,
+      1.0
+     ]
+    },
+    "profile_mismatch": {
+     "support": 182,
+     "precision": 0.9117647058823529,
+     "recall": 0.8516483516483516,
+     "recall_ci": [
+      0.7927614156435066,
+      0.895997706310538
+     ]
+    },
+    "crypto_offramp": {
+     "support": 55,
+     "precision": 0.9333333333333333,
+     "recall": 0.7636363636363637,
+     "recall_ci": [
+      0.6365163381083228,
+      0.8563334413026682
+     ]
+    }
+   }
+  },
+  "without_checks": {
+   "flag_precision": 0.9343163538873994,
+   "flag_recall": 0.9521857923497268,
+   "risk_accuracy": 0.9577777777777777,
+   "high_risk_recall": 0.9504950495049505,
+   "case_correct": 0.8933333333333333,
+   "no_draft_rate": 0.0022222222222222222,
+   "cost_per_case_usd": 0.022040663333333335,
+   "p95_latency_ms": 12215.9,
+   "case_correct_ci": [
+    0.8714678866133181,
+    0.9118553312923725
+   ],
+   "high_risk_recall_ci": [
+    0.8893057492703144,
+    0.9786714901119936
+   ],
+   "failure_modes": {
+    "false_flag": 49,
+    "missed_flag": 35,
+    "risk_too_high": 20,
+    "risk_too_low": 16,
+    "format": 2
+   },
+   "per_flag": {
+    "structuring": {
+     "support": 48,
+     "precision": 1.0,
+     "recall": 1.0,
+     "recall_ci": [
+      0.9258998703338824,
+      0.9999999999999999
+     ]
+    },
+    "pass_through": {
+     "support": 51,
+     "precision": 1.0,
+     "recall": 1.0,
+     "recall_ci": [
+      0.9299533801014687,
+      1.0
+     ]
+    },
+    "high_velocity_inbound": {
+     "support": 124,
+     "precision": 1.0,
+     "recall": 1.0,
+     "recall_ci": [
+      0.9699513846593223,
+      0.9999999999999999
+     ]
+    },
+    "funnel_outbound": {
+     "support": 233,
+     "precision": 1.0,
+     "recall": 1.0,
+     "recall_ci": [
+      0.9837804629315244,
+      1.0
+     ]
+    },
+    "high_risk_jurisdiction": {
+     "support": 39,
+     "precision": 1.0,
+     "recall": 1.0,
+     "recall_ci": [
+      0.9103331462924287,
+      1.0
+     ]
+    },
+    "profile_mismatch": {
+     "support": 182,
+     "precision": 0.8092783505154639,
+     "recall": 0.8626373626373627,
+     "recall_ci": [
+      0.8050860834788062,
+      0.9051967610363024
+     ]
+    },
+    "crypto_offramp": {
+     "support": 55,
+     "precision": 0.7894736842105263,
+     "recall": 0.8181818181818182,
+     "recall_ci": [
+      0.6966954036336236,
+      0.8981232956555033
+     ]
+    }
+   }
+  },
+  "lift": {
+   "metric": "case_correct",
+   "n": 900,
+   "effect": 0.27444444444444444,
+   "ci": [
+    0.24,
+    0.3088888888888889
+   ],
+   "p": 0.0
+  },
+  "checks": {
+   "unsupported_flags_dropped": 36,
+   "cases_with_unsupported_flag_without_checks": 0.05444444444444444,
+   "cases_with_wrong_number_corrected": 0.06888888888888889,
+   "indicators_added": 0,
+   "risk_raised": 0
+  }
+ },
+ "dev": {
+  "baseline": {
+   "flag_precision": 0.940754039497307,
+   "flag_recall": 0.7528735632183908,
+   "risk_accuracy": 0.7688888888888888,
+   "high_risk_recall": 0.7012987012987013,
+   "case_correct": 0.6655555555555556,
+   "no_draft_rate": 0.0011111111111111111,
+   "cost_per_case_usd": 0.012705616666666667,
+   "p95_latency_ms": 3072.1324999999997,
+   "case_correct_ci": [
+    0.6340860131249257,
+    0.695617827180012
+   ],
+   "high_risk_recall_ci": [
+    0.5915055578793433,
+    0.7919610501238326
+   ],
+   "failure_modes": {
+    "unsupported_evidence": 181,
+    "missed_flag": 158,
+    "risk_too_high": 137,
+    "wrong_fact": 78,
+    "risk_too_low": 70,
+    "false_flag": 33,
+    "format": 1
+   },
+   "per_flag": {
+    "structuring": {
+     "support": 49,
+     "precision": 1.0,
+     "recall": 0.7959183673469388,
+     "recall_ci": [
+      0.6636299908048744,
+      0.8851815039421786
+     ]
+    },
+    "pass_through": {
+     "support": 58,
+     "precision": 1.0,
+     "recall": 0.8448275862068966,
+     "recall_ci": [
+      0.730660191401075,
+      0.9161550804698196
+     ]
+    },
+    "high_velocity_inbound": {
+     "support": 111,
+     "precision": 1.0,
+     "recall": 0.6846846846846847,
+     "recall_ci": [
+      0.59330273871225,
+      0.7637111865811816
+     ]
+    },
+    "funnel_outbound": {
+     "support": 246,
+     "precision": 1.0,
+     "recall": 0.7032520325203252,
+     "recall_ci": [
+      0.6433952992597585,
+      0.7568585275951667
+     ]
+    },
+    "high_risk_jurisdiction": {
+     "support": 26,
+     "precision": 1.0,
+     "recall": 0.9230769230769231,
+     "recall_ci": [
+      0.7585844622837095,
+      0.9786449115277238
+     ]
+    },
+    "profile_mismatch": {
+     "support": 163,
+     "precision": 0.8322981366459627,
+     "recall": 0.8220858895705522,
+     "recall_ci": [
+      0.7561670823551125,
+      0.8731728955028153
+     ]
+    },
+    "crypto_offramp": {
+     "support": 43,
+     "precision": 0.8285714285714286,
+     "recall": 0.6744186046511628,
+     "recall_ci": [
+      0.5251621096752948,
+      0.7950670287343129
+     ]
+    }
+   }
+  },
+  "chosen": {
+   "flag_precision": 0.9523121387283237,
+   "flag_recall": 0.9468390804597702,
+   "risk_accuracy": 0.9455555555555556,
+   "high_risk_recall": 1.0,
+   "case_correct": 0.8922222222222222,
+   "no_draft_rate": 0.006666666666666667,
+   "cost_per_case_usd": 0.02204127,
+   "p95_latency_ms": 12218.695,
+   "case_correct_ci": [
+    0.8702702417663966,
+    0.9108401986875831
+   ],
+   "high_risk_recall_ci": [
+    0.9524815747175658,
+    0.9999999999999999
+   ],
+   "failure_modes": {
+    "wrong_fact": 57,
+    "risk_too_high": 35,
+    "missed_flag": 34,
+    "false_flag": 33,
+    "unsupported_evidence": 31,
+    "risk_too_low": 8,
+    "format": 6
+   },
+   "per_flag": {
+    "structuring": {
+     "support": 49,
+     "precision": 1.0,
+     "recall": 1.0,
+     "recall_ci": [
+      0.9273021807795035,
+      0.9999999999999999
+     ]
+    },
+    "pass_through": {
+     "support": 58,
+     "precision": 1.0,
+     "recall": 1.0,
+     "recall_ci": [
+      0.9378821442127971,
+      1.0
+     ]
+    },
+    "high_velocity_inbound": {
+     "support": 111,
+     "precision": 1.0,
+     "recall": 0.990990990990991,
+     "recall_ci": [
+      0.950726667364727,
+      0.9984079145129328
+     ]
+    },
+    "funnel_outbound": {
+     "support": 246,
+     "precision": 1.0,
+     "recall": 0.9959349593495935,
+     "recall_ci": [
+      0.9773372777900204,
+      0.999282059735997
+     ]
+    },
+    "high_risk_jurisdiction": {
+     "support": 26,
+     "precision": 1.0,
+     "recall": 1.0,
+     "recall_ci": [
+      0.8712710781407846,
+      1.0
+     ]
+    },
+    "profile_mismatch": {
+     "support": 163,
+     "precision": 0.8580246913580247,
+     "recall": 0.852760736196319,
+     "recall_ci": [
+      0.7902608422904915,
+      0.8990162763158103
+     ]
+    },
+    "crypto_offramp": {
+     "support": 43,
+     "precision": 0.7619047619047619,
+     "recall": 0.7441860465116279,
+     "recall_ci": [
+      0.5976159650115332,
+      0.8507048287619176
+     ]
+    }
+   }
+  },
+  "checks": {
+   "unsupported_flags_dropped": 32,
+   "cases_with_unsupported_flag_without_checks": 0.06444444444444444,
+   "cases_with_wrong_number_corrected": 0.06333333333333334,
+   "indicators_added": 0,
+   "risk_raised": 0
+  }
+ },
+ "production": {
+  "weeks": [
+   {
+    "week": 1,
+    "cases": 300,
+    "factual_edit_rate": 0.08,
+    "stylistic_edit_rate": 0.33666666666666667,
+    "edit_ucl": null,
+    "psi": {},
+    "flag_rates": {
+     "crypto_offramp": 0.05,
+     "funnel_outbound": 0.21666666666666667,
+     "high_risk_jurisdiction": 0.043333333333333335,
+     "high_velocity_inbound": 0.1,
+     "pass_through": 0.05,
+     "profile_mismatch": 0.16333333333333333,
+     "structuring": 0.07333333333333333
+    },
+    "alerts": [],
+    "config": "production",
+    "case_correct": 0.9233333333333333,
+    "high_risk_recall": 0.9655172413793104,
+    "crypto_recall": 0.8571428571428571,
+    "typologies": {
+     "salary_household": 57,
+     "freelancer": 47,
+     "remittance_family": 35
+    },
+    "gate": null
+   },
+   {
+    "week": 2,
+    "cases": 300,
+    "factual_edit_rate": 0.08,
+    "stylistic_edit_rate": 0.35,
+    "edit_ucl": null,
+    "psi": {},
+    "flag_rates": {
+     "crypto_offramp": 0.04,
+     "funnel_outbound": 0.24666666666666667,
+     "high_risk_jurisdiction": 0.03333333333333333,
+     "high_velocity_inbound": 0.10666666666666667,
+     "pass_through": 0.08666666666666667,
+     "profile_mismatch": 0.15,
+     "structuring": 0.06666666666666667
+    },
+    "alerts": [],
+    "config": "production",
+    "case_correct": 0.9233333333333333,
+    "high_risk_recall": 0.8928571428571429,
+    "crypto_recall": 0.8333333333333334,
+    "typologies": {
+     "salary_household": 68,
+     "remittance_family": 35,
+     "freelancer": 32
+    },
+    "gate": null
+   },
+   {
+    "week": 3,
+    "cases": 300,
+    "factual_edit_rate": 0.08333333333333333,
+    "stylistic_edit_rate": 0.35333333333333333,
+    "edit_ucl": null,
+    "psi": {},
+    "flag_rates": {
+     "crypto_offramp": 0.04,
+     "funnel_outbound": 0.22,
+     "high_risk_jurisdiction": 0.07,
+     "high_velocity_inbound": 0.12666666666666668,
+     "pass_through": 0.056666666666666664,
+     "profile_mismatch": 0.16,
+     "structuring": 0.04
+    },
+    "alerts": [],
+    "config": "production",
+    "case_correct": 0.92,
+    "high_risk_recall": 1.0,
+    "crypto_recall": 0.7333333333333333,
+    "typologies": {
+     "salary_household": 61,
+     "freelancer": 36,
+     "marketplace_seller": 31
+    },
+    "gate": null
+   },
+   {
+    "week": 4,
+    "cases": 300,
+    "factual_edit_rate": 0.06333333333333334,
+    "stylistic_edit_rate": 0.3466666666666667,
+    "edit_ucl": null,
+    "psi": {},
+    "flag_rates": {
+     "crypto_offramp": 0.06,
+     "funnel_outbound": 0.28,
+     "high_risk_jurisdiction": 0.05,
+     "high_velocity_inbound": 0.12,
+     "pass_through": 0.06,
+     "profile_mismatch": 0.18,
+     "structuring": 0.06333333333333334
+    },
+    "alerts": [],
+    "config": "production",
+    "case_correct": 0.94,
+    "high_risk_recall": 1.0,
+    "crypto_recall": 0.9411764705882353,
+    "typologies": {
+     "salary_household": 49,
+     "freelancer": 39,
+     "small_trader": 31
+    },
+    "gate": null
+   },
+   {
+    "week": 5,
+    "cases": 300,
+    "factual_edit_rate": 0.07666666666666666,
+    "stylistic_edit_rate": 0.3466666666666667,
+    "edit_ucl": 0.12274992465334407,
+    "psi": {
+     "transfers": 0.048440654939419646,
+     "distinct_senders": 0.01890269958454242,
+     "inbound_share": 0.03579745499132153,
+     "top_up_share": 0.0
+    },
+    "flag_rates": {
+     "crypto_offramp": 0.023333333333333334,
+     "funnel_outbound": 0.27666666666666667,
+     "high_risk_jurisdiction": 0.043333333333333335,
+     "high_velocity_inbound": 0.15,
+     "pass_through": 0.06666666666666667,
+     "profile_mismatch": 0.16,
+     "structuring": 0.05333333333333334
+    },
+    "alerts": [],
+    "config": "production",
+    "case_correct": 0.9233333333333333,
+    "high_risk_recall": 1.0,
+    "crypto_recall": 0.7,
+    "typologies": {
+     "salary_household": 52,
+     "freelancer": 39,
+     "remittance_family": 31
+    },
+    "gate": null
+   },
+   {
+    "week": 6,
+    "cases": 300,
+    "factual_edit_rate": 0.09333333333333334,
+    "stylistic_edit_rate": 0.35333333333333333,
+    "edit_ucl": 0.12274992465334407,
+    "psi": {
+     "transfers": 0.05032872635914244,
+     "distinct_senders": 0.009785472158248926,
+     "inbound_share": 0.023681894416476904,
+     "top_up_share": 0.0
+    },
+    "flag_rates": {
+     "crypto_offramp": 0.06333333333333334,
+     "funnel_outbound": 0.24666666666666667,
+     "high_risk_jurisdiction": 0.04,
+     "high_velocity_inbound": 0.12,
+     "pass_through": 0.07,
+     "profile_mismatch": 0.19666666666666666,
+     "structuring": 0.05333333333333334
+    },
+    "alerts": [],
+    "config": "production",
+    "case_correct": 0.9133333333333333,
+    "high_risk_recall": 0.967741935483871,
+    "crypto_recall": 0.9473684210526315,
+    "typologies": {
+     "salary_household": 72,
+     "freelancer": 32,
+     "remittance_family": 23
+    },
+    "gate": null
+   },
+   {
+    "week": 7,
+    "cases": 300,
+    "factual_edit_rate": 0.13333333333333333,
+    "stylistic_edit_rate": 0.3466666666666667,
+    "edit_ucl": 0.12274992465334407,
+    "psi": {
+     "transfers": 0.05248036942145879,
+     "distinct_senders": 0.0642719217701539,
+     "inbound_share": 0.09339608977483234,
+     "top_up_share": 0.0
+    },
+    "flag_rates": {
+     "crypto_offramp": 0.05333333333333334,
+     "funnel_outbound": 0.26,
+     "high_risk_jurisdiction": 0.05,
+     "high_velocity_inbound": 0.17333333333333334,
+     "pass_through": 0.08666666666666667,
+     "profile_mismatch": 0.22333333333333333,
+     "structuring": 0.04666666666666667
+    },
+    "alerts": [
+     "factual edits 13.3% above the control limit 12.3%"
+    ],
+    "config": "production",
+    "case_correct": 0.87,
+    "high_risk_recall": 0.7446808510638298,
+    "crypto_recall": 0.39285714285714285,
+    "typologies": {
+     "salary_household": 49,
+     "marketplace_seller": 30,
+     "remittance_family": 29
+    },
+    "gate": null
+   },
+   {
+    "week": 8,
+    "cases": 300,
+    "factual_edit_rate": 0.14333333333333334,
+    "stylistic_edit_rate": 0.31666666666666665,
+    "edit_ucl": 0.12274992465334407,
+    "psi": {
+     "transfers": 0.07481643494087219,
+     "distinct_senders": 0.13366635177087743,
+     "inbound_share": 0.12709444511720583,
+     "top_up_share": 0.0
+    },
+    "flag_rates": {
+     "crypto_offramp": 0.05,
+     "funnel_outbound": 0.31666666666666665,
+     "high_risk_jurisdiction": 0.043333333333333335,
+     "high_velocity_inbound": 0.14,
+     "pass_through": 0.06666666666666667,
+     "profile_mismatch": 0.23,
+     "structuring": 0.05333333333333334
+    },
+    "alerts": [
+     "factual edits 14.3% above the control limit 12.3%"
+    ],
+    "config": "production",
+    "case_correct": 0.8733333333333333,
+    "high_risk_recall": 0.8181818181818182,
+    "crypto_recall": 0.5555555555555556,
+    "typologies": {
+     "salary_household": 58,
+     "freelancer": 31,
+     "funnel": 26
+    },
+    "gate": null
+   },
+   {
+    "week": 9,
+    "cases": 300,
+    "factual_edit_rate": 0.19333333333333333,
+    "stylistic_edit_rate": 0.23666666666666666,
+    "edit_ucl": 0.12274992465334407,
+    "psi": {
+     "transfers": 0.053399426341232695,
+     "distinct_senders": 0.04539654201287411,
+     "inbound_share": 0.04093838473325905,
+     "top_up_share": 0.0
+    },
+    "flag_rates": {
+     "crypto_offramp": 0.07,
+     "funnel_outbound": 0.26,
+     "high_risk_jurisdiction": 0.03666666666666667,
+     "high_velocity_inbound": 0.17333333333333334,
+     "pass_through": 0.06666666666666667,
+     "profile_mismatch": 0.24,
+     "structuring": 0.03333333333333333
+    },
+    "alerts": [
+     "factual edits 19.3% above the control limit 12.3%"
+    ],
+    "config": "production",
+    "case_correct": 0.81,
+    "high_risk_recall": 0.7777777777777778,
+    "crypto_recall": 0.5,
+    "typologies": {
+     "salary_household": 51,
+     "freelancer": 38,
+     "remittance_family": 30
+    },
+    "gate": {
+     "promote": true,
+     "reason": "non-inferior on high-risk cases and better overall",
+     "high_risk": {
+      "metric": "risk_correct",
+      "n": 89,
+      "effect": 0.14606741573033707,
+      "ci": [
+       0.056179775280898875,
+       0.23595505617977527
+      ],
+      "p": 0.001
+     },
+     "case_correct": {
+      "metric": "case_correct",
+      "n": 600,
+      "effect": 0.06333333333333334,
+      "ci": [
+       0.028333333333333332,
+       0.1
+      ],
+      "p": 0.0
+     }
+    }
+   },
+   {
+    "week": 10,
+    "cases": 300,
+    "factual_edit_rate": 0.12333333333333334,
+    "stylistic_edit_rate": 0.31,
+    "edit_ucl": 0.12274992465334407,
+    "psi": {
+     "transfers": 0.04789793372699042,
+     "distinct_senders": 0.05104830255326429,
+     "inbound_share": 0.06985083437031914,
+     "top_up_share": 0.0
+    },
+    "flag_rates": {
+     "crypto_offramp": 0.09666666666666666,
+     "funnel_outbound": 0.25,
+     "high_risk_jurisdiction": 0.05,
+     "high_velocity_inbound": 0.16333333333333333,
+     "pass_through": 0.043333333333333335,
+     "profile_mismatch": 0.19333333333333333,
+     "structuring": 0.043333333333333335
+    },
+    "alerts": [
+     "factual edits 12.3% above the control limit 12.3%"
+    ],
+    "config": "candidate",
+    "case_correct": 0.8766666666666667,
+    "high_risk_recall": 0.9230769230769231,
+    "crypto_recall": 0.7878787878787878,
+    "typologies": {
+     "salary_household": 64,
+     "freelancer": 37,
+     "remittance_family": 29
+    },
+    "gate": null
+   },
+   {
+    "week": 11,
+    "cases": 300,
+    "factual_edit_rate": 0.1,
+    "stylistic_edit_rate": 0.3466666666666667,
+    "edit_ucl": 0.12274992465334407,
+    "psi": {
+     "transfers": 0.05380552279452778,
+     "distinct_senders": 0.07316218634806877,
+     "inbound_share": 0.1248072718830795,
+     "top_up_share": 0.0
+    },
+    "flag_rates": {
+     "crypto_offramp": 0.07333333333333333,
+     "funnel_outbound": 0.25,
+     "high_risk_jurisdiction": 0.023333333333333334,
+     "high_velocity_inbound": 0.16333333333333333,
+     "pass_through": 0.04,
+     "profile_mismatch": 0.20666666666666667,
+     "structuring": 0.056666666666666664
+    },
+    "alerts": [],
+    "config": "candidate",
+    "case_correct": 0.9033333333333333,
+    "high_risk_recall": 0.9285714285714286,
+    "crypto_recall": 0.7692307692307693,
+    "typologies": {
+     "salary_household": 54,
+     "freelancer": 45,
+     "small_trader": 28
+    },
+    "gate": null
+   },
+   {
+    "week": 12,
+    "cases": 300,
+    "factual_edit_rate": 0.08666666666666667,
+    "stylistic_edit_rate": 0.35,
+    "edit_ucl": 0.12274992465334407,
+    "psi": {
+     "transfers": 0.049809416220078034,
+     "distinct_senders": 0.03777885702339442,
+     "inbound_share": 0.06803444403946164,
+     "top_up_share": 0.0
+    },
+    "flag_rates": {
+     "crypto_offramp": 0.09333333333333334,
+     "funnel_outbound": 0.22333333333333333,
+     "high_risk_jurisdiction": 0.023333333333333334,
+     "high_velocity_inbound": 0.16666666666666666,
+     "pass_through": 0.07,
+     "profile_mismatch": 0.21333333333333335,
+     "structuring": 0.08
+    },
+    "alerts": [],
+    "config": "candidate",
+    "case_correct": 0.9133333333333333,
+    "high_risk_recall": 0.8780487804878049,
+    "crypto_recall": 0.8,
+    "typologies": {
+     "salary_household": 41,
+     "freelancer": 36,
+     "remittance_family": 34
+    },
+    "gate": null
+   }
+  ],
+  "first_alert_week": 7,
+  "false_alert_weeks": 0,
+  "promoted_week": 10,
+  "candidate_config": {
+   "model": "anthropic.claude-sonnet-4-5",
+   "few_shot": 3,
+   "few_shot_set": "v2",
+   "cot": true,
+   "context_order": "raw",
+   "output": "json_text",
+   "indicators": true
+  }
+ },
+ "deflection": {
+  "customers": 24000,
+  "train": 16000,
+  "test": 8000,
+  "positives_test": 138,
+  "auc": 0.880830190348733,
+  "auc_rules": 0.5661284881598885,
+  "model": [
+   {
+    "friction": 0.005,
+    "good_asked": 39,
+    "caught": 28,
+    "positives": 138,
+    "recall": 0.2028985507246377,
+    "precision": 0.417910447761194
+   },
+   {
+    "friction": 0.01,
+    "good_asked": 79,
+    "caught": 32,
+    "positives": 138,
+    "recall": 0.2318840579710145,
+    "precision": 0.2882882882882883
+   },
+   {
+    "friction": 0.02,
+    "good_asked": 157,
+    "caught": 46,
+    "positives": 138,
+    "recall": 0.3333333333333333,
+    "precision": 0.22660098522167488
+   },
+   {
+    "friction": 0.05,
+    "good_asked": 393,
+    "caught": 66,
+    "positives": 138,
+    "recall": 0.4782608695652174,
+    "precision": 0.1437908496732026
+   }
+  ],
+  "rules": [
+   {
+    "friction": 0.005,
+    "good_asked": 39,
+    "caught": 27,
+    "positives": 138,
+    "recall": 0.1956521739130435,
+    "precision": 0.4090909090909091
+   },
+   {
+    "friction": 0.01,
+    "good_asked": 79,
+    "caught": 28,
+    "positives": 138,
+    "recall": 0.2028985507246377,
+    "precision": 0.2616822429906542
+   },
+   {
+    "friction": 0.02,
+    "good_asked": 157,
+    "caught": 28,
+    "positives": 138,
+    "recall": 0.2028985507246377,
+    "precision": 0.15135135135135136
+   },
+   {
+    "friction": 0.05,
+    "good_asked": 394,
+    "caught": 28,
+    "positives": 138,
+    "recall": 0.2028985507246377,
+    "precision": 0.06635071090047394
+   }
+  ]
+ }
+}

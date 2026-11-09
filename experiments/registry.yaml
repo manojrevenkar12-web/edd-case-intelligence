@@ -1,0 +1,47 @@
+# Pre-registered prompt experiments. Written before any of them was run; scripts/lock.py pins this file before the
+# held-out run, where the family is tested once with a Holm correction. Each changes one field of the baseline.
+baseline:
+  model: anthropic.claude-sonnet-4-5
+  few_shot: 0
+  cot: false
+  context_order: raw
+  output: json_text
+  indicators: false
+
+experiments:
+  - id: E1-context-order
+    hypothesis: Putting computed facts first and transfers in time order makes more cases fully right than the raw export.
+    change: {context_order: aggregated_first}
+    metric: case_correct
+    direction: greater
+  - id: E2-few-shot-rare
+    hypothesis: Three worked examples raise recall of crypto off-ramps, a rare typology.
+    change: {few_shot: 3}
+    metric: "recall:crypto_offramp"
+    direction: greater
+  - id: E3-chain-of-thought
+    hypothesis: Asking the model to reason flag by flag improves the risk class.
+    change: {cot: true}
+    metric: risk_correct
+    direction: greater
+  - id: E4-tool-schema
+    hypothesis: A forced tool schema instead of free JSON text reduces cases with no usable draft or a wrong number.
+    change: {output: tool_schema}
+    metric: wrong_fact
+    direction: less
+  - id: E5-computed-indicators
+    hypothesis: Giving the model the computed indicators and asking it only for judgement flags makes more cases fully right.
+    change: {indicators: true}
+    metric: case_correct
+    direction: greater
+  - id: E6-smaller-model
+    hypothesis: Claude Haiku 4.5 makes fewer cases fully right than Sonnet 4.5 (the price of a cheaper model).
+    change: {model: anthropic.claude-haiku-4-5}
+    metric: case_correct
+    direction: less
+  - id: E7-more-examples
+    hypothesis: Eight examples instead of three make more cases fully right.
+    change: {few_shot: 8}
+    against: {few_shot: 3}
+    metric: case_correct
+    direction: greater

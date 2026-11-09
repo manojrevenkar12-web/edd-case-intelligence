@@ -1,0 +1,36 @@
+[project]
+name = "edd"
+version = "1.0.0"
+description = "Enhanced due diligence case workbench: LLM case summaries, evidenced red flags, risk classification and document requests behind deterministic guardrails, with a labelling taxonomy, an eval harness, pre-registered prompt experiments, shadow mode, drift monitoring and an upstream deflection model"
+requires-python = ">=3.11"
+dependencies = [
+  "pydantic>=2.6", "pyyaml>=6", "numpy>=1.26", "pandas>=2.1", "lightgbm>=4.3", "langgraph>=0.2",
+  "fastapi>=0.110", "uvicorn>=0.29", "httpx>=0.27", "scikit-learn>=1.4",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.5"]
+claude = ["anthropic>=0.40"]
+
+[project.scripts]
+edd = "edd.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+filterwarnings = ["ignore::DeprecationWarning", "ignore::FutureWarning", "ignore::UserWarning"]
+
+[tool.ruff]
+line-length = 120
+src = ["src"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF"]
+ignore = ["RUF001", "RUF002", "RUF003", "RUF005", "E731", "SIM102", "SIM105", "SIM108", "B905", "RUF012", "B008"]

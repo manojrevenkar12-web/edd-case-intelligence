@@ -1,0 +1,30 @@
+# Every setting the workbench and its evaluation use.
+
+[monitor]
+baseline_weeks = 4
+psi_alert = 0.2
+flag_rate_z = 4.0
+
+[shadow]
+# A candidate replaces production only if it is not worse on high-risk recall (lower 95% bound of the paired
+# difference above the margin) and its case-level accuracy is at least as good.
+high_risk_margin = 0.02
+min_cases = 300
+
+[experiments]
+alpha = 0.05
+bootstrap = 2000
+
+[deflection]
+friction_budgets = [0.005, 0.01, 0.02, 0.05]
+
+[evaluation]
+golden_size = 900
+dev_size = 900
+heldout_size = 900
+weekly_cases = 300
+weeks = 12
+new_typology_week = 7
+shadow_weeks = [8, 9]
+seed_dev = 11
+seed_heldout = 911
